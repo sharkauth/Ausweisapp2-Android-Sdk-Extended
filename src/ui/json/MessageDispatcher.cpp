@@ -7,6 +7,7 @@
 #include "messages/MsgHandlerAccessRights.h"
 #include "messages/MsgHandlerApiLevel.h"
 #include "messages/MsgHandlerAuth.h"
+#include "messages/MsgHandlerSelfAuth.h"
 #include "messages/MsgHandlerBadState.h"
 #include "messages/MsgHandlerCertificate.h"
 #include "messages/MsgHandlerEnterCan.h"
@@ -72,9 +73,11 @@ QByteArray MessageDispatcher::finish()
 	QByteArray result;
 	if (auto authContext = mContext.getAuthContext())
 	{
+		// TODO: self auth?
 		result = MsgHandlerAuth(authContext).getOutput();
 	}
 
+	// TODO: don't reset workflow if self auth
 	reset();
 	return result;
 }
@@ -119,7 +122,11 @@ MsgHandler MessageDispatcher::createForStateChange(MsgType pStateType)
 	}
 }
 
-
+/**
+ * Process json command.
+ * @param pMsg raw string containing json object
+ * @return MsgHandler for the json command
+ */
 MessageDispatcher::Msg MessageDispatcher::processCommand(const QByteArray& pMsg)
 {
 	QJsonParseError jsonError;
@@ -174,6 +181,9 @@ MsgHandler MessageDispatcher::createForCommand(const QJsonObject& pObj)
 
 		case MsgCmdType::GET_INFO:
 			return MsgHandlerInfo();
+
+		case MsgCmdType::RUN_SELF_AUTH:
+			return mContext.isActiveWorkflow() ? MsgHandler(MsgHandlerBadState(requestType)) : MsgHandler(MsgHandlerSelfAuth(pObj));
 
 		case MsgCmdType::RUN_AUTH:
 			return mContext.isActiveWorkflow() ? MsgHandler(MsgHandlerBadState(requestType)) : MsgHandler(MsgHandlerAuth(pObj));

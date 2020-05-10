@@ -7,6 +7,7 @@
 #pragma once
 
 #include "context/AuthContext.h"
+#include "context/SelfAuthContext.h"
 #include "MessageDispatcher.h"
 #include "UIPlugIn.h"
 
@@ -37,6 +38,7 @@ class UIPlugInJson
 		virtual void doShutdown() override;
 		virtual void onWorkflowStarted(QSharedPointer<WorkflowContext> pContext) override;
 		virtual void onWorkflowFinished(QSharedPointer<WorkflowContext> pContext) override;
+		void onSelfAuthenticationDataChanged();
 		void onReaderEvent(const QString& pName);
 		void onStateChanged(const QString& pNewState);
 

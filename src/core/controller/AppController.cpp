@@ -175,6 +175,7 @@ bool AppController::start()
 		connect(handler, &ActivationHandler::fireShowUserInformation, this, &AppController::fireShowUserInformation);
 		connect(handler, &ActivationHandler::fireShowUiRequest, this, &AppController::fireShowUi);
 		connect(handler, &ActivationHandler::fireAuthenticationRequest, this, &AppController::onAuthenticationRequest, Qt::QueuedConnection);
+		connect(handler, &ActivationHandler::fireSelfAuthenticationRequest, this, &AppController::onSelfAuthenticationRequested, Qt::QueuedConnection);
 
 		if (!handler->start())
 		{

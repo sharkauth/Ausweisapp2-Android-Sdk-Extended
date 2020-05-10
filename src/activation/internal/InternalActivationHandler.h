@@ -27,6 +27,7 @@ class InternalActivationHandler
 		virtual void stop() override;
 
 		void runAuthentication(const QSharedPointer<ActivationContext>& pContext);
+		void runSelfAuthentication();
 };
 
 } // namespace governikus

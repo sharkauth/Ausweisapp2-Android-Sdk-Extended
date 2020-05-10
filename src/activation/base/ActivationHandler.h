@@ -76,6 +76,7 @@ class ActivationHandler
 		void fireShowUserInformation(const QString& pErrorMessage = QString());
 		void fireShowUiRequest(UiModule pModule);
 		void fireAuthenticationRequest(const QSharedPointer<ActivationContext>& pActivationContext);
+		void fireSelfAuthenticationRequest();
 };
 
 } // namespace governikus

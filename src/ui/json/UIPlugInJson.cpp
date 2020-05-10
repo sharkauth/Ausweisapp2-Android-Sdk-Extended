@@ -70,6 +70,12 @@ void UIPlugInJson::onWorkflowStarted(QSharedPointer<WorkflowContext> pContext)
 		return;
 	}
 
+	// TODO add onSelfAuthenticationDataChanged
+	if (auto authContext = pContext.objectCast<SelfAuthContext>())
+	{
+		connect(authContext, &SelfAuthContext::fireSelfAuthenticationDataChanged, this, &UIPlugInJson::onSelfAuthenticationDataChanged);
+	}
+
 	if (pContext.objectCast<AuthContext>())
 	{
 		connect(pContext.data(), &WorkflowContext::fireStateChanged, this, &UIPlugInJson::onStateChanged);
@@ -88,6 +94,30 @@ void UIPlugInJson::onWorkflowFinished(QSharedPointer<WorkflowContext>)
 	}
 
 	callFireMessage(mMessageDispatcher.finish());
+}
+
+
+void UIPlugInJson::onSelfAuthenticationDataChanged() {
+	// TODO: self auth data
+	callFireMessage("{abc}");
+
+//	if (mContext && mContext->getSelfAuthenticationData().isValid())
+//	{
+//		const auto& selfdata = mContext->getSelfAuthenticationData().getOrderedSelfData();
+//		for (const auto& entry : selfdata)
+//		{
+//			if (entry.first.isEmpty())
+//			{
+//				Q_ASSERT(!mSelfData.isEmpty());
+//				const auto& previous = mSelfData.takeLast();
+//				mSelfData << qMakePair(previous.first, previous.second + QStringLiteral("<br/>") + entry.second);
+//			}
+//			else
+//			{
+//				mSelfData << entry;
+//			}
+//		}
+//	}
 }
 
 

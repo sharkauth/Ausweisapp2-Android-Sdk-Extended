@@ -32,6 +32,12 @@ void InternalActivationHandler::runAuthentication(const QSharedPointer<Activatio
 }
 
 
+void InternalActivationHandler::runSelfAuthentication()
+{
+	Q_EMIT fireSelfAuthenticationRequest();
+}
+
+
 bool InternalActivationHandler::start()
 {
 	return true;
