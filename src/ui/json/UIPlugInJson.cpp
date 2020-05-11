@@ -73,7 +73,7 @@ void UIPlugInJson::onWorkflowStarted(QSharedPointer<WorkflowContext> pContext)
 	// TODO add onSelfAuthenticationDataChanged
 	if (auto authContext = pContext.objectCast<SelfAuthContext>())
 	{
-		connect(authContext, &SelfAuthContext::fireSelfAuthenticationDataChanged, this, &UIPlugInJson::onSelfAuthenticationDataChanged);
+		connect(authContext.data(), &SelfAuthContext::fireSelfAuthenticationDataChanged, this, &UIPlugInJson::onSelfAuthenticationDataChanged);
 	}
 
 	if (pContext.objectCast<AuthContext>())

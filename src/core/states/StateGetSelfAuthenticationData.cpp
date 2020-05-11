@@ -123,6 +123,9 @@ void StateGetSelfAuthenticationData::onNetworkReply()
 		if (data.isValid())
 		{
 			getContext()->setSelfAuthenticationData(data);
+
+			qDebug() << "abcdef" << data.getOrderedSelfData().at(0).second;
+
 			Q_EMIT fireContinue();
 		}
 		else
