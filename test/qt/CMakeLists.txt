@@ -71,7 +71,7 @@ FUNCTION(SHOULD_SKIP_TEST _out filename)
 	STRING(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}/" "" test "${sourcefile}")
 
 	IF(INTEGRATED_SDK AND (test MATCHES "ui/qml"
-		OR test MATCHES "ui/widget"))
+		OR test MATCHES "ui/widget" OR test MATCHES "export"))
 		SET(${_out} TRUE PARENT_SCOPE)
 		RETURN()
 	ENDIF()

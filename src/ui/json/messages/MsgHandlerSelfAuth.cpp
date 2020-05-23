@@ -29,21 +29,13 @@ MsgHandlerSelfAuth::MsgHandlerSelfAuth(const QSharedPointer<SelfAuthContext>& pC
 
 	mJsonObject[QLatin1String("result")] = ECardApiResult(pContext->getStatus()).toJson();
 
-	QString url;
-	if (pContext->getRefreshUrl().isEmpty())
+	QJsonObject obj;
+	auto data = pContext->getSelfAuthenticationData().getOrderedSelfData();
+	for (const auto &d : data)
 	{
-		const auto& token = pContext->getTcToken();
-		if (!token.isNull() && pContext->getTcToken()->getCommunicationErrorAddress().isValid())
-		{
-			url = pContext->getTcToken()->getCommunicationErrorAddress().toString();
-		}
+		obj[d.first] = d.second;
 	}
-	else
-	{
-		url = pContext->getRefreshUrl().toString();
-	}
-
-	setValue("url", url);
+	mJsonObject[QLatin1String("data")] = obj;
 }
 
 

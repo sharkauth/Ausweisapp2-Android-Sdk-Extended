@@ -71,13 +71,15 @@ QByteArray MessageDispatcher::finish()
 	Q_ASSERT(mContext.isActiveWorkflow());
 
 	QByteArray result;
-	if (auto authContext = mContext.getAuthContext())
+	if (auto authContext = mContext.getAuthContext().objectCast<SelfAuthContext>())
 	{
-		// TODO: self auth?
+		result = MsgHandlerSelfAuth(authContext).getOutput();
+	}
+	else if (auto authContext = mContext.getAuthContext())
+	{
 		result = MsgHandlerAuth(authContext).getOutput();
 	}
 
-	// TODO: don't reset workflow if self auth
 	reset();
 	return result;
 }

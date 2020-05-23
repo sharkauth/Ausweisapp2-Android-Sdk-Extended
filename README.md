@@ -17,17 +17,20 @@ Qt und OpenSSL für Android bauen:
 ```
 $ mkdir awapp2-build-lib
 $ cd awapp2-build-lib
-$ cmake -DCMAKE_BUILD_TYPE=release -DCMAKE_TOOLCHAIN_FILE=../awapp2-ext/cmake/android.toolchain.cmake ../awapp2-ext/libs
+$ cmake -DCMAKE_ANDROID_ARCH_ABI=arm64-v8a -DCMAKE_BUILD_TYPE=release -DCMAKE_TOOLCHAIN_FILE=../awapp2-ext/cmake/android.toolchain.cmake ../awapp2-ext/libs
 $ make -j 16
 ```
-Android App:
+
+Android AAR:
 ```
 $ mkdir awapp2-build-app
 $ cd awapp2-build-app
-$ cmake -DCMAKE_BUILD_TYPE=debug -DCMAKE_PREFIX_PATH=/.../awapp2-build-lib/dist -DCMAKE_TOOLCHAIN_FILE=../awapp2-ext/cmake/android.toolchain.cmake ../awapp2-ext
+$ cmake -DCMAKE_ANDROID_ARCH_ABI=arm64-v8a -DCMAKE_BUILD_TYPE=debug -DCMAKE_PREFIX_PATH=/.../awapp2-build-lib/dist -DCMAKE_TOOLCHAIN_FILE=../awapp2-ext/cmake/android.toolchain.cmake ../awapp2-ext
 $ make -j 16
 $ make install
-$ make apk
+$ make aar
 ```
 
 *Hinweis: `/.../` bedeutet absoluter Pfad wir benötigt!*
+
+`.aar` unter `awapp2-build-app/dist/` nach `android/AusweisAppSDKTest/app/libs/` kopieren und Android App bauen.
