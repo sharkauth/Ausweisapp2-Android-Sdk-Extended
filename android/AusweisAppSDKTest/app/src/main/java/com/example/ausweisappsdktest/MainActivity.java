@@ -1,115 +1,59 @@
 package com.example.ausweisappsdktest;
 
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.os.RemoteException;
 import android.util.Log;
-import android.widget.Button;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.governikus.ausweisapp2.IAusweisApp2Sdk;
+import com.example.ausweisapp2sdkextended.SelfAuthWorkflow;
+import com.example.ausweisapp2sdkextended.UserData;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class MainActivity extends AppCompatActivity {
-    IAusweisApp2Sdk mSdk;
-    LocalCallback mCallback;
     ForegroundDispatcher foregroundDispatcher;
+    SelfAuthWorkflow extSdk;
 
-    Button sendAuthButton;
-    Button sendCancelButton;
     TextView passwordTextView;
     TextView replyTextView;
+    ProgressBar progressBar;
+
+    ExecutorService es;
+    Future task;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sendAuthButton = findViewById(R.id.send_auth);
-        sendCancelButton = findViewById(R.id.send_cancel);
         passwordTextView = findViewById(R.id.password);
         replyTextView = findViewById(R.id.reply);
 
-        mCallback = new LocalCallback(this);
+        progressBar = findViewById(R.id.progress_loader);
+        progressBar.setVisibility(View.INVISIBLE);
 
-        sendAuthButton.setOnClickListener(v ->
-                sendToSdk("{\"cmd\": \"RUN_SELF_AUTH\"}")
-        );
+        es = Executors.newSingleThreadExecutor();
 
-        sendCancelButton.setOnClickListener(v ->
-                sendToSdk("{\"cmd\": \"CANCEL\"}")
-        );
+        try {
+            extSdk = SelfAuthWorkflow.start(this);
+        } catch (SelfAuthWorkflow.WorkflowException e) {
+            Log.e("sdk", "", e);
+        }
 
-        ServiceConnection mConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName className, IBinder service) {
-                try {
-                    mSdk = IAusweisApp2Sdk.Stub.asInterface(service);
-                    Log.i("sdk", "onServiceConnected");
-
-                    mSdk.connectSdk(mCallback);
-                    Log.i("sdk", "connectSdk");
-                } catch (ClassCastException | RemoteException e) {
-                    Log.e("sdk", "", e);
-                }
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName className) {
-                Log.i("onServiceDisconnected", "disconnected");
-                mSdk = null;
-            }
-        };
-
-        String pkg = getApplicationContext().getPackageName();
-
-        String name = "com.governikus.ausweisapp2.START_SERVICE";
-        Intent serviceIntent = new Intent(name);
-        serviceIntent.setPackage(pkg);
-        bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
         foregroundDispatcher = new ForegroundDispatcher(this);
-
-    }
-
-    void handleReply(String msg) {
-        replyTextView.setText(replyTextView.getText() + "\n@@@@\n" + msg);
-
-        try {
-            JSONObject obj = new JSONObject(msg);
-
-            switch (obj.getString("msg")) {
-                case "ACCESS_RIGHTS":
-                    sendToSdk("{\"cmd\": \"ACCEPT\"}");
-                    break;
-                case "ENTER_PIN":
-                    sendToSdk("{\"cmd\": \"SET_PIN\", \"value\": \"" + passwordTextView.getText() + "\"}");
-                    break;
-                default:
-                    Log.i("msg", obj.getString("msg"));
-            }
-        } catch (JSONException e) {
-            Log.e("msg", msg, e);
-        }
-    }
-
-    void sendToSdk(String msg) {
-        try {
-            mSdk.send(mCallback.mSessionID, msg);
-            Log.i("send", msg);
-        } catch (RemoteException e) {
-            Log.e("send", msg, e);
-        }
     }
 
     @Override
@@ -123,10 +67,34 @@ public class MainActivity extends AppCompatActivity {
         final Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
         if (tag != null) {
             try {
-                mSdk.updateNfcTag(mCallback.mSessionID, tag);
-            } catch (RemoteException e) {
-                Log.e("sdk", "", e);
+                if (task != null) {
+                    task.get(100, TimeUnit.MILLISECONDS);
+                }
+            } catch (InterruptedException e) {
+            } catch (ExecutionException | TimeoutException e) {
+                e.printStackTrace();
             }
+
+            progressBar.setVisibility(View.VISIBLE);
+            passwordTextView.setEnabled(false);
+            task = es.submit(() -> {
+                try {
+                    UserData user = extSdk.runSelfAuth(tag, passwordTextView.getText().toString());
+                    Log.i("eID user data", user.toString());
+
+                    runOnUiThread(() -> passwordTextView.setText(user.toString()));
+                } catch (SelfAuthWorkflow.WorkflowException e) {
+                    runOnUiThread(() -> Toast.makeText(MainActivity.this,
+                            e.getMessage(), Toast.LENGTH_LONG).show());
+                    Log.w("sdk", "runSelfAuth failed", e);
+                } catch (InterruptedException ignored) {
+                } finally {
+                    runOnUiThread(() -> {
+                        progressBar.setVisibility(View.INVISIBLE);
+                        passwordTextView.setEnabled(true);
+                    });
+                }
+            });
         }
     }
 
@@ -140,5 +108,17 @@ public class MainActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         foregroundDispatcher.disable();
+
+        if (task != null) {
+            task.cancel(true);
+            task = null;
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        extSdk.stop();
     }
 }

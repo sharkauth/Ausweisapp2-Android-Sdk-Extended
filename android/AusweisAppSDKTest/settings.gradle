@@ -1,2 +1,3 @@
 rootProject.name='AusweisAppSDKTest'
-include ':app'
+include ':app', ':ausweisapp-1.20.0+34-extended-9cebc40'
+include ':ausweisapp2sdkextended'
