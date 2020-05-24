@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 if (task != null) {
                     task.get(100, TimeUnit.MILLISECONDS);
                 }
-            } catch (InterruptedException e) {
+            } catch (InterruptedException ignored) {
             } catch (ExecutionException | TimeoutException e) {
                 e.printStackTrace();
             }
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                     UserData user = extSdk.runSelfAuth(tag, passwordTextView.getText().toString());
                     Log.i("eID user data", user.toString());
 
-                    runOnUiThread(() -> passwordTextView.setText(user.toString()));
+                    runOnUiThread(() -> replyTextView.setText(user.toString()));
                 } catch (SelfAuthWorkflow.WorkflowException e) {
                     runOnUiThread(() -> Toast.makeText(MainActivity.this,
                             e.getMessage(), Toast.LENGTH_LONG).show());
