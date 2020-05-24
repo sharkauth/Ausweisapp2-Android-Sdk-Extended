@@ -33,4 +33,4 @@ $ make aar
 
 *Hinweis: `/.../` bedeutet absoluter Pfad wir benötigt!*
 
-`.aar` unter `awapp2-build-app/dist/` nach `android/AusweisAppSDKTest/app/libs/` kopieren und Android App bauen.
+`.aar` unter `awapp2-build-app/dist/` nach `android/AusweisAppSDKTest/ausweisapp-1.20.0-extended/` kopieren und Android App bauen.
