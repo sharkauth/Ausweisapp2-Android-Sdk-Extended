@@ -33,4 +33,17 @@ $ make aar
 
 *Hinweis: `/.../` bedeutet absoluter Pfad wir benötigt!*
 
-`.aar` unter `awapp2-build-app/dist/` nach `android/AusweisAppSDKTest/ausweisapp-1.20.0-extended/` kopieren und Android App bauen.
+## Android App & SDK
+
+Unter `android/AusweisAppSDKTest` befindet sich folgendes:
+```
+/app                       Demo App, die ausweisapp2sdkextended nutzt.
+/ausweisapp-1.2.0-extended Erweitertete AusweisApp2 um einen Self Auth Worklfow im JSON UI Plugin.
+/ausweisapp2sdkextended    Android AAR Plugin, welches ausweisapp-1.2.0-extended nutzt bzw. abstrahiert.
+```
+
+### ausweisapp-1.2.0-extended
+
+Nach dem Build von der erweiterten AusweisApp2 muss die entstandene `.aar` Bibliothek unter `awapp2-build-app/dist/` nach `android/AusweisAppSDKTest/ausweisapp-1.20.0-extended/` kopiert werden.
+
+Abschließend kann der Gradle `build` Task in der Demo App ausgeführt werden.
