@@ -120,6 +120,7 @@ public class SelfAuthWorkflow {
             }
 
             boolean workflowStarted = false;
+            boolean pinEntered = false;
             while (true) {
                 // blocks
                 String json = sdkCallback.receiverQueue.take();
@@ -145,7 +146,11 @@ public class SelfAuthWorkflow {
                             cancel();
                             break;
                         case "ENTER_PIN":
+                            if (pinEntered) {
+                                throw new WorkflowException("PIN already send");
+                            }
                             sendToSdk("{\"cmd\": \"SET_PIN\", \"value\": \"" + pin + "\"}");
+                            pinEntered = true;
                             break;
                         case "BAD_STATE":
                             throw new WorkflowException("Bad workflow state");
