@@ -47,3 +47,11 @@ Unter `android/AusweisAppSDKTest` befindet sich folgendes:
 Nach dem Build von der erweiterten AusweisApp2 muss die entstandene `.aar` Bibliothek unter `awapp2-build-app/dist/` nach `android/AusweisAppSDKTest/ausweisapp-1.20.0-extended/` kopiert werden.
 
 Abschließend kann der Gradle `build` Task in der Demo App ausgeführt werden.
+
+## Demo App
+
+Die Demo App ziegt nach erfolgreicher Authentifizierung die Daten aus dem Personalausweis an.
+
+### Ablauf
+Der Nutzer gibt vorher seine 6-Stellige PIN ein und hält den Personalausweis solange an den NFC Chip des Smartphones, bis der Ladekreis verschwindet.
+Anschließend sollten Daten, wie Vorname oder Name angezeigt werden. Im Falle eines Fehlers erscheint eine Popup Meldung im unteren Bereich des Bildschirms.
