@@ -215,24 +215,17 @@ public class SelfAuthWorkflow {
 
     private UserData jsonToUser(JSONObject obj) {
         UserData u = new UserData();
-        u.setAddress(obj.optString("address", ""));
-        u.setBirthName(obj.optString("birthName", ""));
-        u.setFamilyName(obj.optString("familyName", ""));
-        u.setGivenNames(obj.optString("givenNames", ""));
-        u.setPlaceOfBirth(obj.optString("placeOfBirth", ""));
-        u.setDateOfBirth(obj.optString("dateOfBirth", ""));
-        u.setDoctoralDegree(obj.optString("doctoralDegree", ""));
-        u.setArtisticName(obj.optString("artisticName", ""));
-        u.setPseudonym(obj.optString("pseudonym", ""));
-        u.setValidUntil(obj.optString("validUntil", ""));
-        u.setNationality(obj.optString("nationality", ""));
-        u.setIssuingCountry(obj.optString("issuingCountry", ""));
-        u.setDocumentType(obj.optString("documentType", ""));
-        u.setResidencePermitI(obj.optString("residencePermitI", ""));
-        u.setResidencePermitII(obj.optString("residencePermitII", ""));
-        u.setCommunityID(obj.optString("communityID", ""));
-        u.setAddressVerification(obj.optString("addressVerification", ""));
-        u.setAgeVerification(obj.optString("ageVerification", ""));
+        u.setAddress(obj.optString("Address", ""));
+        // u.setBirthName(obj.optString("Birth name", "")); // TODO chip generation dependent
+        u.setFamilyName(obj.optString("Family name", ""));
+        u.setGivenNames(obj.optString("Given name(s)", ""));
+        u.setPlaceOfBirth(obj.optString("Place of birth", ""));
+        u.setDateOfBirth(obj.optString("Date of birth", ""));
+        u.setDoctoralDegree(obj.optString("Doctoral degree", ""));
+        u.setArtisticName(obj.optString("Religious / artistic name", ""));
+        u.setNationality(obj.optString("Nationality", ""));
+        u.setIssuingCountry(obj.optString("Issuing country", ""));
+        u.setDocumentType(obj.optString("Document type", ""));
         return u;
     }
 }
