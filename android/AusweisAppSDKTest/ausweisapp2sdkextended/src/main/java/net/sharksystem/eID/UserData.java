@@ -1,8 +1,7 @@
-package com.example.ausweisapp2sdkextended;
+package net.sharksystem.eID;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.UUID;
 
 public class UserData {
     private String address;

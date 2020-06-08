@@ -1,4 +1,4 @@
-package com.example.ausweisapp2sdkextended;
+package net.sharksystem.eID;
 
 import android.content.ComponentName;
 import android.content.Context;

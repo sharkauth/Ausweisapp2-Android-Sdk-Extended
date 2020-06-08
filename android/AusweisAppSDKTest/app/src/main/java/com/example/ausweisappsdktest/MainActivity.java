@@ -13,8 +13,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ausweisapp2sdkextended.SelfAuthWorkflow;
-import com.example.ausweisapp2sdkextended.UserData;
+import net.sharksystem.eID.SelfAuthWorkflow;
+import net.sharksystem.eID.UserData;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
