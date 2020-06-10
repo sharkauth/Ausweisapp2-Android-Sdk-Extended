@@ -128,4 +128,50 @@ public class UserData {
                 ", documentType='" + documentType + '\'' +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserData userData = (UserData) o;
+
+        if (address != null ? !address.equals(userData.address) : userData.address != null)
+            return false;
+        if (birthName != null ? !birthName.equals(userData.birthName) : userData.birthName != null)
+            return false;
+        if (familyName != null ? !familyName.equals(userData.familyName) : userData.familyName != null)
+            return false;
+        if (givenNames != null ? !givenNames.equals(userData.givenNames) : userData.givenNames != null)
+            return false;
+        if (placeOfBirth != null ? !placeOfBirth.equals(userData.placeOfBirth) : userData.placeOfBirth != null)
+            return false;
+        if (dateOfBirth != null ? !dateOfBirth.equals(userData.dateOfBirth) : userData.dateOfBirth != null)
+            return false;
+        if (doctoralDegree != null ? !doctoralDegree.equals(userData.doctoralDegree) : userData.doctoralDegree != null)
+            return false;
+        if (artisticName != null ? !artisticName.equals(userData.artisticName) : userData.artisticName != null)
+            return false;
+        if (nationality != null ? !nationality.equals(userData.nationality) : userData.nationality != null)
+            return false;
+        if (issuingCountry != null ? !issuingCountry.equals(userData.issuingCountry) : userData.issuingCountry != null)
+            return false;
+        return documentType != null ? documentType.equals(userData.documentType) : userData.documentType == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = address != null ? address.hashCode() : 0;
+        result = 31 * result + (birthName != null ? birthName.hashCode() : 0);
+        result = 31 * result + (familyName != null ? familyName.hashCode() : 0);
+        result = 31 * result + (givenNames != null ? givenNames.hashCode() : 0);
+        result = 31 * result + (placeOfBirth != null ? placeOfBirth.hashCode() : 0);
+        result = 31 * result + (dateOfBirth != null ? dateOfBirth.hashCode() : 0);
+        result = 31 * result + (doctoralDegree != null ? doctoralDegree.hashCode() : 0);
+        result = 31 * result + (artisticName != null ? artisticName.hashCode() : 0);
+        result = 31 * result + (nationality != null ? nationality.hashCode() : 0);
+        result = 31 * result + (issuingCountry != null ? issuingCountry.hashCode() : 0);
+        result = 31 * result + (documentType != null ? documentType.hashCode() : 0);
+        return result;
+    }
 }

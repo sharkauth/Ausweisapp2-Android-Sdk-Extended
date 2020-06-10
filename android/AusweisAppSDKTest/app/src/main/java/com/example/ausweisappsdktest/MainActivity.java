@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import net.sharksystem.eID.Connector;
 import net.sharksystem.eID.SelfAuthWorkflow;
 import net.sharksystem.eID.UserData;
 
@@ -25,7 +26,7 @@ import java.util.concurrent.TimeoutException;
 
 public class MainActivity extends AppCompatActivity {
     ForegroundDispatcher foregroundDispatcher;
-    SelfAuthWorkflow extSdk;
+    Connector extSdk;
 
     TextView passwordTextView;
     TextView replyTextView;
@@ -48,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
         es = Executors.newSingleThreadExecutor();
 
         try {
-            extSdk = SelfAuthWorkflow.start(this);
-        } catch (SelfAuthWorkflow.WorkflowException e) {
+            extSdk = Connector.start(this);
+        } catch (Connector.ServiceException e) {
             Log.e("sdk", "", e);
         }
 
@@ -79,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
             passwordTextView.setEnabled(false);
             task = es.submit(() -> {
                 try {
-                    UserData user = extSdk.runSelfAuth(tag, passwordTextView.getText().toString());
+                    UserData user = extSdk.runWorkflow(tag, new SelfAuthWorkflow(passwordTextView.getText().toString()));
                     Log.i("eID user data", user.toString());
 
                     runOnUiThread(() -> replyTextView.setText(user.toString()));
